@@ -1,0 +1,181 @@
+{
+  "main": {
+    "id": "42cec96b0d9957bd",
+    "type": "split",
+    "children": [
+      {
+        "id": "bfc123b4970133bb",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "c412223103a01ee9",
+            "type": "leaf",
+            "state": {
+              "type": "empty",
+              "state": {},
+              "icon": "lucide-file",
+              "title": "Uusi välilehti"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "0b8326d0221f1b62",
+    "type": "split",
+    "children": [
+      {
+        "id": "587be592d57f59f1",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "3e3ab2da2c3ecee4",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Tiedostot"
+            }
+          },
+          {
+            "id": "ba5a4894d6584b27",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Etsi"
+            }
+          },
+          {
+            "id": "2f67cf6db196f6d0",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Kirjanmerkit"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "1a119b39d6e89a4c",
+    "type": "split",
+    "children": [
+      {
+        "id": "85f54d2e803b4f13",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "44d5d61b02ea7214",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Paluulinkit"
+            }
+          },
+          {
+            "id": "52b7297e95370e84",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Lähtevät linkit"
+            }
+          },
+          {
+            "id": "18412e503155ad80",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tunnisteet"
+            }
+          },
+          {
+            "id": "99e5b9aa243d5ac0",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "Kaikki määreet"
+            }
+          },
+          {
+            "id": "a81f13257c6a6a47",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Sisällysluettelo"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Avaa pikavaihdin": false,
+      "graph:Avaa verkkonäkymä": false,
+      "canvas:Luo uusi valkotaulu": false,
+      "daily-notes:Avaa tämän päivän muistiinpanot": false,
+      "templates:Lisää malline": false,
+      "command-palette:Avaa komentovalikko": false,
+      "bases:Luo uusi kanta": false
+    }
+  },
+  "active": "c412223103a01ee9",
+  "lastOpenFiles": []
+}
