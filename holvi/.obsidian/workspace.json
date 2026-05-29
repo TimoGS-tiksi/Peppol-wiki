@@ -11,10 +11,14 @@
             "id": "c412223103a01ee9",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "00_inbox/Mikä ihmeen peppol!.md",
+                "mode": "source",
+                "source": false
+              },
               "icon": "lucide-file",
-              "title": "Uusi välilehti"
+              "title": "Mikä ihmeen peppol!"
             }
           }
         ]
@@ -178,6 +182,7 @@
   },
   "active": "c412223103a01ee9",
   "lastOpenFiles": [
+    "00_inbox/Mikä ihmeen peppol!.md",
     "99_templates/answer.md",
     "99_templates/concept.md",
     "99_templates/source.md",
