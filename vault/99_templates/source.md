@@ -24,18 +24,21 @@ source_date:
 
 ## Summary
 
-
 ## Key Points
 
-- 
+## Claims
 
-## Direct Quotes
+## Assumptions
 
+## Stakeholders
 
-## Related Notes
-
-- 
+## Implications
+## Risks
 
 ## Open Questions
 
-- 
+## Related Concepts
+
+## Suggested Concept Updates
+
+ 

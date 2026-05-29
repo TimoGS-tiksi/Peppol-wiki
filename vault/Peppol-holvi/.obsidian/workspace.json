@@ -1,24 +1,20 @@
 {
   "main": {
-    "id": "42cec96b0d9957bd",
+    "id": "5f1bcf5d00d759f4",
     "type": "split",
     "children": [
       {
-        "id": "bfc123b4970133bb",
+        "id": "da8e49ce88d3e548",
         "type": "tabs",
         "children": [
           {
-            "id": "c412223103a01ee9",
+            "id": "ba56f6440b4a6b50",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "00_inbox/Mikä ihmeen peppol!.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Mikä ihmeen peppol!"
+              "type": "graph",
+              "state": {},
+              "icon": "lucide-git-fork",
+              "title": "Verkkonäkymä"
             }
           }
         ]
@@ -27,15 +23,15 @@
     "direction": "vertical"
   },
   "left": {
-    "id": "0b8326d0221f1b62",
+    "id": "4ba9b3f247563336",
     "type": "split",
     "children": [
       {
-        "id": "587be592d57f59f1",
+        "id": "7d2b8884a4fa25f4",
         "type": "tabs",
         "children": [
           {
-            "id": "3e3ab2da2c3ecee4",
+            "id": "3ce8508f7516c505",
             "type": "leaf",
             "state": {
               "type": "file-explorer",
@@ -48,7 +44,7 @@
             }
           },
           {
-            "id": "ba5a4894d6584b27",
+            "id": "fbdc2b9fc3ac4820",
             "type": "leaf",
             "state": {
               "type": "search",
@@ -65,7 +61,7 @@
             }
           },
           {
-            "id": "2f67cf6db196f6d0",
+            "id": "651fa194959a5bc0",
             "type": "leaf",
             "state": {
               "type": "bookmarks",
@@ -81,15 +77,15 @@
     "width": 300
   },
   "right": {
-    "id": "1a119b39d6e89a4c",
+    "id": "080e50d0d572286b",
     "type": "split",
     "children": [
       {
-        "id": "85f54d2e803b4f13",
+        "id": "0c17b94772790340",
         "type": "tabs",
         "children": [
           {
-            "id": "44d5d61b02ea7214",
+            "id": "bb3216726b0516e5",
             "type": "leaf",
             "state": {
               "type": "backlink",
@@ -107,7 +103,7 @@
             }
           },
           {
-            "id": "52b7297e95370e84",
+            "id": "3e3602dddef54718",
             "type": "leaf",
             "state": {
               "type": "outgoing-link",
@@ -120,7 +116,7 @@
             }
           },
           {
-            "id": "18412e503155ad80",
+            "id": "a3e998c4d9635435",
             "type": "leaf",
             "state": {
               "type": "tag",
@@ -135,7 +131,7 @@
             }
           },
           {
-            "id": "99e5b9aa243d5ac0",
+            "id": "ec5e13d322a6a2c3",
             "type": "leaf",
             "state": {
               "type": "all-properties",
@@ -149,7 +145,7 @@
             }
           },
           {
-            "id": "a81f13257c6a6a47",
+            "id": "b29c30dfa5e4bc23",
             "type": "leaf",
             "state": {
               "type": "outline",
@@ -180,21 +176,9 @@
       "bases:Luo uusi kanta": false
     }
   },
-  "active": "c412223103a01ee9",
+  "active": "3ce8508f7516c505",
   "lastOpenFiles": [
-    "00_inbox/Mikä ihmeen peppol!.md",
-    "99_templates/answer.md",
-    "99_templates/concept.md",
-    "99_templates/source.md",
-    "99_templates/source.md.txt",
-    "99_templates/source.txt",
-    "99_templates/Uusi Tekstitiedosto.txt",
-    "assets",
-    "99_templates",
-    "07_staging",
-    "06_indexes",
-    "05_answers",
-    "04_projects",
-    "03_concepts"
+    "Nimetön.base",
+    "Tervetuloa.md"
   ]
 }

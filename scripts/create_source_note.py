@@ -11,10 +11,49 @@ from pathlib import Path
 from urllib import request
 
 
+def configure_stdio() -> None:
+    for stream in (sys.stdout, sys.stderr):
+        if hasattr(stream, "reconfigure"):
+            stream.reconfigure(encoding="utf-8")
+
+
+def normalize_unicode(value: str) -> str:
+    return unicodedata.normalize("NFC", value)
+
+
+def mojibake_score(value: str) -> int:
+    markers = ("Ã", "Â", "â€", "â€“", "â€™", "â€œ", "â€\x9d", "\ufffd")
+    return sum(value.count(marker) for marker in markers)
+
+
+def repair_mojibake(value: str) -> str:
+    best = value
+    best_score = mojibake_score(value)
+
+    for encoding in ("windows-1252", "latin-1"):
+        try:
+            candidate = value.encode(encoding).decode("utf-8")
+        except UnicodeError:
+            continue
+
+        candidate_score = mojibake_score(candidate)
+        if candidate_score < best_score:
+            best = candidate
+            best_score = candidate_score
+
+    return best
+
+
+def clean_source_text(value: str) -> str:
+    cleaned = repair_mojibake(value)
+    cleaned = cleaned.replace("\ufeff", "")
+    cleaned = cleaned.replace("\u00ad", "")
+    return normalize_unicode(cleaned)
+
+
 def slugify(title: str) -> str:
-    normalized = unicodedata.normalize("NFKD", title)
-    ascii_title = normalized.encode("ascii", "ignore").decode("ascii")
-    slug = re.sub(r"[^a-zA-Z0-9]+", "-", ascii_title.lower()).strip("-")
+    normalized = normalize_unicode(title).casefold()
+    slug = re.sub(r"[^\w]+", "-", normalized, flags=re.UNICODE).strip("-_")
     return slug or "untitled-source"
 
 
@@ -23,6 +62,52 @@ def first_non_empty_line(text: str) -> str | None:
         stripped = line.strip()
         if stripped:
             return stripped
+    return None
+
+
+def split_frontmatter(text: str) -> tuple[dict[str, str], str]:
+    lines = text.splitlines()
+    if not lines or lines[0].strip() != "---":
+        return {}, text
+
+    for index, line in enumerate(lines[1:], start=1):
+        if line.strip() == "---":
+            frontmatter = parse_simple_frontmatter(lines[1:index])
+            body = "\n".join(lines[index + 1 :])
+            return frontmatter, body
+
+    return {}, text
+
+
+def parse_simple_frontmatter(lines: list[str]) -> dict[str, str]:
+    metadata: dict[str, str] = {}
+    current_key: str | None = None
+
+    for line in lines:
+        if line.startswith((" ", "\t")) and current_key:
+            stripped = line.strip()
+            if stripped.startswith("- "):
+                metadata[current_key] = stripped[2:].strip().strip('"')
+            continue
+
+        if ":" not in line:
+            current_key = None
+            continue
+
+        key, value = line.split(":", 1)
+        current_key = key.strip()
+        value = value.strip().strip('"')
+        if value:
+            metadata[current_key] = value
+
+    return metadata
+
+
+def first_markdown_heading(text: str) -> str | None:
+    for line in text.splitlines():
+        stripped = line.strip()
+        if stripped.startswith("#"):
+            return stripped.lstrip("#").strip() or None
     return None
 
 
@@ -39,13 +124,143 @@ def unique_path(path: Path) -> Path:
 
 
 def yaml_quote(value: str) -> str:
-    return json.dumps(value, ensure_ascii=False)
+    return json.dumps(normalize_unicode(value), ensure_ascii=False)
 
 
 def markdown_list(items: list[str]) -> str:
     if not items:
         return "-"
     return "\n".join(f"- {item}" for item in items)
+
+
+def strip_markdown(value: str) -> str:
+    stripped = re.sub(r"!\[([^\]]*)\]\([^)]+\)", r"\1", value)
+    stripped = re.sub(r"\[([^\]]+)\]\([^)]+\)", r"\1", stripped)
+    stripped = re.sub(r"\[\[([^\]|]+)(?:\|[^\]]+)?\]\]", r"\1", stripped)
+    stripped = stripped.replace("**", "").replace("__", "")
+    stripped = stripped.replace("*", "").replace("`", "")
+    return re.sub(r"\s+", " ", stripped).strip()
+
+
+def source_paragraphs(body: str) -> list[str]:
+    paragraphs: list[str] = []
+    current: list[str] = []
+
+    for line in body.splitlines():
+        stripped = line.strip()
+        if not stripped:
+            if current:
+                paragraphs.append(strip_markdown(" ".join(current)))
+                current = []
+            continue
+        if stripped.startswith(("#", ">", "-", "!", "|", "```")):
+            if current:
+                paragraphs.append(strip_markdown(" ".join(current)))
+                current = []
+            continue
+        current.append(stripped)
+
+    if current:
+        paragraphs.append(strip_markdown(" ".join(current)))
+
+    return [paragraph for paragraph in paragraphs if paragraph]
+
+
+def source_headings(body: str) -> list[str]:
+    headings: list[str] = []
+    for line in body.splitlines():
+        stripped = line.strip()
+        if re.match(r"#{2,6}\s+", stripped):
+            headings.append(strip_markdown(stripped.lstrip("#").strip()))
+    return headings
+
+
+def split_sentences(text: str) -> list[str]:
+    sentences = re.split(r"(?<=[.!?])\s+", text.strip())
+    return [sentence.strip() for sentence in sentences if sentence.strip()]
+
+
+def truncate_text(text: str, max_length: int = 260) -> str:
+    if len(text) <= max_length:
+        return text
+    truncated = text[: max_length - 1].rsplit(" ", 1)[0].rstrip()
+    return f"{truncated}…"
+
+
+def extract_direct_quotes(body: str) -> list[str]:
+    quotes: list[str] = []
+    current: list[str] = []
+
+    for line in body.splitlines():
+        stripped = line.strip()
+        if stripped.startswith(">"):
+            current.append(stripped.lstrip(">").strip())
+            continue
+        if current:
+            quote = strip_markdown(" ".join(current))
+            if quote:
+                quotes.append(truncate_text(f'"{quote}"'))
+            current = []
+
+    if current:
+        quote = strip_markdown(" ".join(current))
+        if quote:
+            quotes.append(truncate_text(f'"{quote}"'))
+
+    return quotes
+
+
+def extract_related_notes(text: str) -> list[str]:
+    links = re.findall(r"\[\[([^\]|]+)(?:\|[^\]]+)?\]\]", text)
+    seen: set[str] = set()
+    related: list[str] = []
+
+    for link in links:
+        normalized = link.strip()
+        if normalized and normalized not in seen:
+            seen.add(normalized)
+            related.append(f"[[{normalized}]]")
+
+    return related
+
+
+def extract_open_questions(body: str) -> list[str]:
+    questions: list[str] = []
+    for paragraph in source_paragraphs(body):
+        for sentence in split_sentences(paragraph):
+            if "?" in sentence:
+                questions.append(truncate_text(sentence))
+    return questions[:6]
+
+
+def analyze_source(metadata: dict[str, str], body: str) -> dict[str, object]:
+    paragraphs = source_paragraphs(body)
+    headings = source_headings(body)
+    description = metadata.get("description", "").strip()
+
+    if description:
+        summary = strip_markdown(description)
+    elif paragraphs:
+        summary = " ".join(split_sentences(paragraphs[0])[:2])
+    else:
+        summary = ""
+
+    key_points = headings[:8]
+    if len(key_points) < 3:
+        for paragraph in paragraphs[1:]:
+            first_sentence = split_sentences(paragraph)
+            if first_sentence:
+                key_points.append(truncate_text(first_sentence[0]))
+            if len(key_points) >= 6:
+                break
+
+    return {
+        "summary": summary,
+        "key_points": key_points,
+        "direct_quotes": extract_direct_quotes(body),
+        "related_notes": extract_related_notes("\n".join(metadata.values()) + "\n" + body),
+        "open_questions": extract_open_questions(body),
+    }
 
 
 def resolve_inbox_file(root: Path, inbox: Path, user_path: str) -> Path:
@@ -189,48 +404,50 @@ Review this note before moving any synthesized concepts into `vault/03_concepts/
 def build_source_note(
     *,
     title: str,
-    body: str,
     source_url: str,
     source_author: str,
     source_date: str,
+    analysis: dict[str, object],
 ) -> str:
     today = date.today().isoformat()
+    summary = str(analysis.get("summary", "")).strip()
+    key_points = normalize_string_list(analysis.get("key_points"))
+    direct_quotes = normalize_string_list(analysis.get("direct_quotes"))
+    related_notes = normalize_string_list(analysis.get("related_notes"))
+    open_questions = normalize_string_list(analysis.get("open_questions"))
+
     return f"""---
 type: source
 created: {today}
 tags: []
 status: draft
-source_title: "{title}"
-source_url: "{source_url}"
-source_author: "{source_author}"
-source_date: "{source_date}"
+source_title: {yaml_quote(title)}
+source_url: {yaml_quote(source_url)}
+source_author: {yaml_quote(source_author)}
+source_date: {yaml_quote(source_date)}
 ---
 
 # {title}
 
 ## Summary
 
+{summary}
 
 ## Key Points
 
--
+{markdown_list(key_points)}
 
 ## Direct Quotes
 
-
-## Original Text
-
-```text
-{body.rstrip()}
-```
+{markdown_list(direct_quotes)}
 
 ## Related Notes
 
--
+{markdown_list(related_notes)}
 
 ## Open Questions
 
--
+{markdown_list(open_questions)}
 """
 
 
@@ -248,17 +465,25 @@ def create_source_note(
     sources.mkdir(parents=True, exist_ok=True)
 
     input_path = resolve_inbox_file(root, inbox, input_name)
-    body = input_path.read_text(encoding="utf-8")
-    note_title = title or first_non_empty_line(body) or input_path.stem
+    body = clean_source_text(input_path.read_text(encoding="utf-8-sig"))
+    metadata, content_body = split_frontmatter(body)
+    note_title = (
+        title
+        or metadata.get("title")
+        or first_markdown_heading(content_body)
+        or first_non_empty_line(content_body)
+        or input_path.stem
+    )
     slug = slugify(note_title)
     output_path = unique_path(sources / f"{slug}.md")
+    analysis = analyze_source(metadata, content_body)
 
     note = build_source_note(
         title=note_title,
-        body=body,
-        source_url=source_url,
-        source_author=source_author,
-        source_date=source_date,
+        source_url=source_url or metadata.get("source", ""),
+        source_author=source_author or metadata.get("author", ""),
+        source_date=source_date or metadata.get("published", ""),
+        analysis=analysis,
     )
     output_path.write_text(note, encoding="utf-8", newline="\n")
     return output_path, note_title, body
@@ -289,6 +514,8 @@ def create_staging_analysis(
 
 
 def main() -> int:
+    configure_stdio()
+
     parser = argparse.ArgumentParser(
         description="Create a source note from a text file in vault/00_inbox."
     )

@@ -62,6 +62,128 @@ Allowed `type` values include:
 - Summarize one source only.
 - Include enough bibliographic or URL information to find the source again.
 - Separate direct quotes from summaries.
+- Every source note must identify practical implications for technology providers, organizations and decision makers whenever applicable.
+
+## Source Note Generation Rules
+
+When creating a source note, every section must contain meaningful content.
+
+Never leave template sections empty.
+
+The purpose of a source note is analysis, not extraction.
+
+### Summary
+
+Write a concise executive summary.
+
+Length:
+3-10 sentences.
+
+Describe:
+
+- what the document is about
+- why it matters
+- the main conclusions
+
+Do not copy text from the source.
+
+### Key Points
+
+Identify the most important observations.
+
+Use bullet points.
+
+Prefer insights over facts.
+
+Typically 5-15 bullets.
+
+### Claims
+
+Identify explicit or implicit claims made by the source.
+
+For each claim indicate:
+
+- claim
+- supporting evidence if available
+- confidence level
+
+Example:
+
+- Claim: Peppol adoption will increase because of ViDA.
+  Evidence: EU proposals.
+  Confidence: Medium.
+
+### Assumptions
+
+Identify assumptions made by the author.
+
+Examples:
+
+- technology assumptions
+- regulatory assumptions
+- market assumptions
+
+Do not assume assumptions are true.
+
+### Stakeholders
+
+Identify affected stakeholders.
+
+Examples:
+
+- software vendors
+- SMEs
+- public sector
+- accounting firms
+
+Describe why the stakeholder is relevant.
+
+### Risks
+
+Identify risks and failure modes.
+
+Examples:
+
+- implementation risks
+- regulatory risks
+- vendor lock-in risks
+- data quality risks
+
+### Open Questions
+
+Identify unanswered questions.
+
+Focus on:
+
+- missing evidence
+- unresolved issues
+- contradictions
+- future developments
+
+Questions should be actionable and researchable.
+
+Bad:
+
+"What happens next?"
+
+Good:
+
+"Will ViDA require real-time reporting for domestic invoices in Finland?"
+
+### Related Concepts
+
+Identify concepts that should exist in the wiki.
+
+Use Obsidian links.
+
+Example:
+
+- [[Peppol]]
+- [[EN 16931]]
+- [[ViDA]]
+- [[Data Quality]]
+
+Only create links when the concept is genuinely relevant.
 
 ## Concept Notes
 
